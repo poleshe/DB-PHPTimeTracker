@@ -1,0 +1,45 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: Nginx-Dockerfile
+    volumes:
+      - './project/:/var/www/project/'
+    ports:
+      - '8001:80'
+    networks:
+      - default
+    depends_on:
+      - mysql
+  php:
+    build:
+      context: .
+      dockerfile: Php-Dockerfile
+    environment:
+      APP_ENV: dev
+    volumes:
+      - './project/:/var/www/project/'
+    networks:
+      - default
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+      - '--default_authentication-plugin=mysql_native_password'
+    environment:
+      MYSQL_DATABASE: timetracker
+      MYSQL_USER: polestecha
+      MYSQL_PASSWORD: polestecha
+      MYSQL_ROOT_PASSWORD: polestecha
+    ports:
+      - '3306:3306'
+    volumes:
+      - './mysql/:/var/lib/mysql'
+    networks:
+      - default
+networks:
+  default:

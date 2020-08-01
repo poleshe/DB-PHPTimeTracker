@@ -1,0 +1,13 @@
+FROM php:fpm-stretch
+
+RUN apt-get update -y
+
+RUN apt-get update && apt-get install -y --no-install-recommends git zlib1g-dev libxml2-dev libzip-dev
+
+RUN docker-php-ext-install zip intl mysqli pdo_mysql
+
+RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+
+COPY project/ /var/www/project
+
+WORKDIR /var/www/project/	
