@@ -30,6 +30,7 @@ class StartController extends AbstractController
             $timetracker = $entityManager->getRepository(Times::class)->findOneBy(array('name' => $name));
             // If the row does not exist, create a new one.
             if (!$timetracker) {
+                $entityManager = $this->getDoctrine()->getManager();
                 // Initialize new Times ORM and set the name and datetime. Everything is either 0 or now.
                 $timetracker = new Times();
                 $timetracker->setName($name);
@@ -41,7 +42,8 @@ class StartController extends AbstractController
                 $entityManager->persist($timetracker);
                 $entityManager->flush();
                 return $this->json([
-                    'message' => 'Everything OK.',
+                    'message' => 'Started Tracking Time for the '.$name.' task.',
+                    'status' => '200',
                 ]);
             // If it DOES exist...
             } else {
@@ -51,7 +53,8 @@ class StartController extends AbstractController
                 // Execute the query. No need to persist, it already exists in the DB.
                 $entityManager->flush();
                 return $this->json([
-                    'message' => 'BAD.',
+                    'message' => 'Started Tracking Time for the '.$name.' task.',
+                    'status' => '200',
                 ]);
             }
 

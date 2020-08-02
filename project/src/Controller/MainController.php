@@ -73,12 +73,10 @@ class MainController extends AbstractController
         }        
     }
 
-
     /**
      * This function is used to add time to an already existing datetime object.
      * Arguments: String with time in format: 00:00:00 (hours, minutes, seconds), datetime object.
      * 
-     * Created by: Pol Estecha.
      */
     public function addTime(DateTime $timeA, DateTime $totaltime)
     {
