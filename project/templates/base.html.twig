@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        {% endblock %}
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <style>
+            body{
+                background-color: #E0FEFE;
+            }
+
+            .container{
+                position: relative;
+                border: 1px solid transparent;
+                border-radius: 15px;
+                width: 80%;
+                margin: auto;
+                margin-top: 10%;
+                background-color: #e9e9e4;
+            }
+
+            .numbercontainer{
+                position: relative;
+                margin: auto;
+                text-align: center;
+            }
+
+            #numbers{
+                font-size: 3em;
+                text-align: center;
+            }
+
+            #sendinput{
+                display: block;
+                color: black;
+                text-align: center;
+            }
+
+            #stop{
+                width: 90%;
+                display: none;
+                position: relative;
+                background-color: red;
+                margin: auto;
+                margin-bottom: 20px;
+                margin-top: 40px;
+            }
+        </style>
+        {% block body %} 
+        
+        <div class="container">
+
+            
+            <div class="numbercontainer" id="numbercontainer">
+                <p id="taskname"> Task Name </p>
+                <span id="numbers"> <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span> </span>
+            </div>
+            <div class="input-field col s1" id="sendinput">
+                <input placeholder="Task Name" id="task_name_form" type="text" class="validate" style="width: 55%; margin-right: 5%; margin-left: 5%">
+                <button class="btn waves-effect waves-light" type="submit" name="action" id="startbutton" onclick>Start
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+
+            <form method="POST" action="{{path('main')}}">
+                <div>
+                    <input id="sendtasktime" name="time" type="text" style="display: none">
+                    <input id="sendtaskname" name="name" type="text" style="display: none">
+                    <input id="sendtaskid" name="id" type="text" style="display: none" value="1">
+                    <button class="btn waves-effect waves-light" type="submit" name="action" id="stop">STOP
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </form>
+
+        </div> 
+        
+        {% endblock %}
+        {% block javascripts %}
+        
+        <script>
+
+        document.getElementById("startbutton").addEventListener("click", function(){ 
+            document.getElementById("taskname").innerText = document.getElementById("task_name_form").value;
+            document.getElementById("sendinput").style.display = "none";
+            document.getElementById("stop").style.display = "block";
+            document.getElementById("sendtaskname").value = document.getElementById("taskname").innerText;
+            startTimer();
+        }); 
+
+        $('#stop').click(function(){
+            stopTimer();
+        });
+
+        var hours =0;
+        var mins =0;
+        var seconds =0;
+
+        function startTimer(){
+            timex = setTimeout(function(){
+                seconds++;
+                if(seconds >59)
+                    {
+                    seconds=0;mins++;
+                    if(mins>59) {
+                        mins=0;hours++;
+                            if(hours <10) {
+                                $("#hours").text('0'+hours)
+                                } else 
+                                $("#hours").text(hours);
+                        }
+
+                        if(mins<10){                     
+                        $("#minutes").text('0'+mins);
+                        } else $("#minutes").text(mins);
+                    }    
+                if(seconds <10) {
+                    $("#seconds").text('0'+seconds);} else {
+                    $("#seconds").text(seconds);
+                }
+                document.getElementById('sendtasktime').value = document.getElementById('numbers').innerText;
+                startTimer();
+                },1000);
+        }
+  
+        </script>
+
+        {% endblock %}
+    </body>
+</html>
