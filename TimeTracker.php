@@ -60,9 +60,19 @@ function stop($name){
 
 // Get an SQL-Like list from all items on the DB using CURL.
 function listitems(){
-
-    print("Item Listing");
-
+    print("Stopping Time Tracker on Task .\n");
+    // Initialize curl
+    $ch = curl_init();
+    // Set curl params
+    curl_setopt($ch, CURLOPT_URL,"http://localhost:8001/list");
+    curl_setopt($ch, CURLOPT_POST, 1);
+    // Receive server response
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $server_output = curl_exec($ch);
+    // Close curl
+    curl_close ($ch);
+    // Managing results
+    print_r(json_decode($server_output));
 }
 
 // Print the help panel. Also appears if there is no arguments.
