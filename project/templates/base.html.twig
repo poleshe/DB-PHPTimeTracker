@@ -23,7 +23,7 @@
                 border-radius: 15px;
                 width: 80%;
                 margin: auto;
-                margin-top: 10%;
+                margin-top: 50px;
                 background-color: #e9e9e4;
             }
 
@@ -54,6 +54,16 @@
                 margin-top: 40px;
             }
 
+            .timescontainer{
+                max-height: 30em !important;
+                width: 80%;
+                position: relative;
+                margin: auto;
+                margin-top: 20px;
+                overflow-y: auto !important;
+
+            }
+
             .timesdiv{
                 position: relative;
                 background-color: white;
@@ -62,6 +72,13 @@
                 margin: auto;
                 width: 60%;
                 margin-top: 10px;
+                text-align: center;
+            }
+
+            .totaltimespent{
+                font-weight: bold;
+                font-size: 1.5em;
+                text-align: center;
             }
         </style>
         {% block body %} 
@@ -89,16 +106,20 @@
                     </button>
                 </div>
             </form>
-
         </div> 
 
-        
-        {% for time in times %}
-            <div class="timesdiv">
-                <p>{{ time.getName }}</p>
-            </div>
-        {% endfor %}
-        
+        <div>
+            <p class="totaltimespent"> Time Spent Today: {{ totaltime|date('H:i:s') }}</p>
+        </div>
+
+        <div class="timescontainer">
+            {% for time in times %}
+                <div class="timesdiv">
+                    <p> <b> Task Name: </b> {{ time.getName }}</p>
+                    <p> <b> Time Spent: </b> {{ time.getTime|date('H:i:s') }} </p>
+                </div>
+            {% endfor %}
+        </div>
         
         {% endblock %}
         {% block javascripts %}
@@ -110,12 +131,12 @@
             document.getElementById("sendinput").style.display = "none";
             document.getElementById("stop").style.display = "block";
             document.getElementById("sendtaskname").value = document.getElementById("taskname").innerText;
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "/start", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send("name="+document.getElementById("taskname").innerText);
             startTimer();
         }); 
-
-        $('#stop').click(function(){
-            stopTimer();
-        });
 
         var hours =0;
         var mins =0;
