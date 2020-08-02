@@ -17,6 +17,8 @@ class StartController extends AbstractController
     /**
      * @Route("/start", name="start")
      */
+
+     // This functions manages the start of a new time tracker counter.
     public function index(Request $request)
     {
         if ($request->request->get('name')){
@@ -26,18 +28,17 @@ class StartController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             // Query for one item with the same name, to check if it exists.
             $timetracker = $entityManager->getRepository(Times::class)->findOneBy(array('name' => $name));
-
+            // If the row does not exist, create a new one.
             if (!$timetracker) {
-                // Initialize new Times ORM and set the name and datetime.
-
+                // Initialize new Times ORM and set the name and datetime. Everything is either 0 or now.
                 $timetracker = new Times();
                 $timetracker->setName($name);
                 $timetracker->setTime(\DateTime::createFromFormat('H:i:s', '00:00:00'));
                 $timetracker->setStartTime(new \DateTime());
+                // Set to true because we just started executing it.
                 $timetracker->setStatus(true);
                 // Execute the query
                 $entityManager->persist($timetracker);
-
                 $entityManager->flush();
                 return $this->json([
                     'message' => 'Everything OK.',

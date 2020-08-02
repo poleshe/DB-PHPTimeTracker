@@ -20,40 +20,37 @@ class MainController extends AbstractController
     public function index(Request $request)
     {
         // Check if the request has been done (If the stop button has been pressed).
-        if ($request->request->get('name') && $request->request->get('time')) {
+        if ($request->request->get('name')) {
             // Get the data.
             $name = $request->request->get('name');
-            $time = $request->request->get('time');
             // Start the doctrine manager.
             $entityManager = $this->getDoctrine()->getManager();
             // Query for one item with the same name, to check if it exists.
             $timetracker = $entityManager->getRepository(Times::class)->findOneBy(array('name' => $name));
-
             // If it does not...
             if (!$timetracker) {
-                // Should always exist as they get created on start.
+                // Should always exist as they get created on start. If it doesnt throw error.
                 throw $this->createNotFoundException(
                     'No timetrack found for the name '.$name
                 );
             // If it DOES exist...
             } else {
-                // Get the DB object time.
+                // Get the DB start time.
                 $timeA = $timetracker->getStartTime();
-                // Set the name and new date time.
+                // Set the name,the new end time, and the status.
                 $timetracker->setName($name);
                 $timetracker->setEndTime(new \DateTime());
                 $timetracker->setStatus(false);
-
+                // Get the elapsed time & add the time passed. This is done by substracting start date and end date.
                 $totaltime = $timetracker->getTime();
-                $totaltime = $this->addTime($time, $timeA, $totaltime);
-                
+                $totaltime = $this->addTime($timeA, $totaltime);
+                // Update time elapsed.
                 $timetracker->setTime(\DateTime::createFromFormat('H:i:s', $totaltime->format('H:i:s')));
-                
                 // Execute the query.
                 $entityManager->flush();
                 
             }
-            
+            // Get all the rows for viewing the time spent and calculate the total time spent.
             $alltimes = $this->getDoctrine()->getRepository(Times::class);
             $alltimes = $alltimes->findAll();
             $totaltimetoday = $this->getTotalTime($alltimes);
@@ -67,8 +64,8 @@ class MainController extends AbstractController
             $alltimes = $this->getDoctrine()->getRepository(Times::class);
             $alltimes = $alltimes->findAll();
 
+            // Get all the rows for viewing the time spent and calculate the total time spent.
             $totaltimetoday = $this->getTotalTime($alltimes);
-
             return $this->render('base.html.twig', array(
                 'times' => $alltimes,
                 'totaltime' => $totaltimetoday,
@@ -83,7 +80,7 @@ class MainController extends AbstractController
      * 
      * Created by: Pol Estecha.
      */
-    public function addTime(String $time, DateTime $timeA, DateTime $totaltime)
+    public function addTime(DateTime $timeA, DateTime $totaltime)
     {
         $timestart = $timeA;
         $timeend= new \DateTime();

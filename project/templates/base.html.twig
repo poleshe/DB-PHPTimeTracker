@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body>
+        {# CSS code #}
         <style>
             body{
                 background-color: #E0FEFE;
@@ -81,11 +82,11 @@
                 text-align: center;
             }
         </style>
+
+        {#  ENDOF css #}
         {% block body %} 
         
         <div class="container">
-
-            
             <div class="numbercontainer" id="numbercontainer">
                 <p id="taskname"> Task Name </p>
                 <span id="numbers"> <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span> </span>
@@ -97,9 +98,9 @@
                 </button>
             </div>
 
+            {# This form is triggered when we click STOP. It sends a stop petition to the server. #}
             <form method="post">
                 <div>
-                    <input id="sendtasktime" name="time" value="00:00:00" type="text" style="display: none">
                     <input id="sendtaskname" name="name" type="text" style="display: none">
                     <button class="btn waves-effect waves-light" type="submit" name="action" id="stop">STOP
                         <i class="material-icons right">send</i>
@@ -107,11 +108,11 @@
                 </div>
             </form>
         </div> 
-
+        {# total time spent. #}
         <div>
             <p class="totaltimespent"> Time Spent Today: {{ totaltime|date('H:i:s') }}</p>
         </div>
-
+        {# For each time tracker row in the DB, create a little visualizer #}
         <div class="timescontainer">
             {% for time in times %}
                 <div class="timesdiv">
@@ -125,23 +126,26 @@
         {% block javascripts %}
         
         <script>
-
+        {# Event listener for the click function. We fill with info the front, send a start petition, then start the timer. #}
         document.getElementById("startbutton").addEventListener("click", function(){ 
+            // fill the front.
             document.getElementById("taskname").innerText = document.getElementById("task_name_form").value;
             document.getElementById("sendinput").style.display = "none";
             document.getElementById("stop").style.display = "block";
             document.getElementById("sendtaskname").value = document.getElementById("taskname").innerText;
+            // petition is sent here
             var xhttp = new XMLHttpRequest();
             xhttp.open("POST", "/start", true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.send("name="+document.getElementById("taskname").innerText);
+            // start the timer.
             startTimer();
         }); 
-
+        {# ENDOF event listener #}
         var hours =0;
         var mins =0;
         var seconds =0;
-
+        {# JQUERY / JS Timer. #}
         function startTimer(){
             timex = setTimeout(function(){
                 seconds++;
@@ -164,11 +168,10 @@
                     $("#seconds").text('0'+seconds);} else {
                     $("#seconds").text(seconds);
                 }
-                document.getElementById('sendtasktime').value = document.getElementById('numbers').innerText;
                 startTimer();
                 },1000);
         }
-  
+        {# ENDOF timer #}
         </script>
 
         {% endblock %}
