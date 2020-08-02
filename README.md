@@ -63,8 +63,10 @@ php TimeTracker.php help, or no argument, will print help about the script, simi
 
 ```
 
-## Help & Thanks
+## Help, Errors & Thanks
 If you need any help do not hesitate to contact me via mail at polestecha14@gmail.com or phone +34 687 211 022
+
+I am aware that when starting a non existent Task via the PHP script, it returns a 502 error. Despite this, the function works perfectly with no error, and the task starts normally. Sorry!
 
 Again, thanks a lot for your time and the opportunity. Hope you find the project interesting!
 
