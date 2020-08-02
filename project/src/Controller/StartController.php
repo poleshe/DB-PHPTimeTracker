@@ -30,6 +30,8 @@ class StartController extends AbstractController
             $timetracker = $entityManager->getRepository(Times::class)->findOneBy(array('name' => $name));
             // If the row does not exist, create a new one.
             if (!$timetracker) {
+                unset($timetracker);
+                unset($entityManager);
                 $entityManager = $this->getDoctrine()->getManager();
                 // Initialize new Times ORM and set the name and datetime. Everything is either 0 or now.
                 $timetracker = new Times();
@@ -57,8 +59,6 @@ class StartController extends AbstractController
                     'status' => '200',
                 ]);
             }
-
-            
         }
     }
 }

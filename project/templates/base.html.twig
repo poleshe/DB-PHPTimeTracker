@@ -74,6 +74,9 @@
                 width: 60%;
                 margin-top: 10px;
                 text-align: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .totaltimespent{
@@ -93,7 +96,7 @@
             </div>
             <div class="input-field col s1" id="sendinput">
                 <input placeholder="Task Name" required id="task_name_form" type="text" class="validate" style="width: 55%; margin-right: 5%; margin-left: 5%">
-                <button class="btn waves-effect waves-light" type="submit" name="action" id="startbutton" onclick>Start
+                <button disabled class="btn waves-effect waves-light" type="submit" name="action" id="startbutton" onclick>Start
                     <i class="material-icons right">send</i>
                 </button>
             </div>
@@ -103,7 +106,7 @@
                 <div>
                     <input id="sendtaskname" name="name" type="text" style="display: none">
                     <button class="btn waves-effect waves-light" type="submit" name="action" id="stop">STOP
-                        <i class="material-icons right">send</i>
+                        <i class="material-icons right">stop</i>
                     </button>
                 </div>
             </form>
@@ -126,8 +129,19 @@
         {% block javascripts %}
         
         <script>
-        {# Event listener for the click function. We fill with info the front, send a start petition, then start the timer. #}
-        document.getElementById("startbutton").addEventListener("click", function(){ 
+
+            document.getElementById("task_name_form").addEventListener('keyup', (event) => {
+                if(document.getElementById("task_name_form").value != ""){
+                    document.getElementById("startbutton").disabled = false;
+                } else {
+                    document.getElementById("startbutton").disabled = true;
+                }
+            });
+       
+
+
+            {# Event listener for the click function. We fill with info the front, send a start petition, then start the timer. #}
+            document.getElementById("startbutton").addEventListener("click", function(){ 
             // fill the front.
             document.getElementById("taskname").innerText = document.getElementById("task_name_form").value;
             document.getElementById("sendinput").style.display = "none";

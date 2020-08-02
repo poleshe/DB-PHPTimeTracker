@@ -26,9 +26,13 @@ class ListController extends AbstractController
         foreach ($alltimes as $times) {
             $response[] = array(
                 'name' => $times->getName(),
+                'status' => $times->getStatus(),
+                'start_time' => $times->getStartTime(),
+                'end_time' => $times->getEndTime(),
+                'total_time' => $times->getTime(),
             );
         }
     
-        return new JsonResponse(json_encode($response));
+        return new JsonResponse($response);
     }
 }

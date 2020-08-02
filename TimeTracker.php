@@ -55,12 +55,11 @@ function stop($name){
     // Close curl
     curl_close ($ch);
     // Managing results
-    print("Stopped succesfully");
+    print("Stopped succesfully \n");
 }
 
 // Get an SQL-Like list from all items on the DB using CURL.
 function listitems(){
-    print("Stopping Time Tracker on Task .\n");
     // Initialize curl
     $ch = curl_init();
     // Set curl params
@@ -72,7 +71,24 @@ function listitems(){
     // Close curl
     curl_close ($ch);
     // Managing results
-    print_r(json_decode($server_output));
+    $times_list = json_decode($server_output);
+    // Print out a table with the data.
+    print("# NAME # STATUS # START TIME # END TIME # TOTAL TIME # \n");
+    print("----------------------------------------------------------------------------------------\n");
+    foreach ($times_list as $time) {
+        // Swap boolean for string
+        if($time->status == 0){
+            $status = "Stopped";
+        } else {
+            $status = "Counting";
+        }
+        // Get total hours
+        $totalhours = substr($time->total_time->date, 0, 19);
+        $totalhours = substr($totalhours, 11);
+
+        print("|".$time->name." | ".$status." | ".$time->start_time->date." | ".$time->end_time->date." | ".$totalhours."|\n");
+        print("----------------------------------------------------------------------------------------\n");
+    }
 }
 
 // Print the help panel. Also appears if there is no arguments.
