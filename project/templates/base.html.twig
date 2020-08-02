@@ -53,6 +53,16 @@
                 margin-bottom: 20px;
                 margin-top: 40px;
             }
+
+            .timesdiv{
+                position: relative;
+                background-color: white;
+                border: 1px solid black;
+                border-radius: 15px;
+                margin: auto;
+                width: 60%;
+                margin-top: 10px;
+            }
         </style>
         {% block body %} 
         
@@ -64,17 +74,16 @@
                 <span id="numbers"> <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span> </span>
             </div>
             <div class="input-field col s1" id="sendinput">
-                <input placeholder="Task Name" id="task_name_form" type="text" class="validate" style="width: 55%; margin-right: 5%; margin-left: 5%">
+                <input placeholder="Task Name" required id="task_name_form" type="text" class="validate" style="width: 55%; margin-right: 5%; margin-left: 5%">
                 <button class="btn waves-effect waves-light" type="submit" name="action" id="startbutton" onclick>Start
                     <i class="material-icons right">send</i>
                 </button>
             </div>
 
-            <form method="POST" action="{{path('main')}}">
+            <form method="post">
                 <div>
-                    <input id="sendtasktime" name="time" type="text" style="display: none">
+                    <input id="sendtasktime" name="time" value="00:00:00" type="text" style="display: none">
                     <input id="sendtaskname" name="name" type="text" style="display: none">
-                    <input id="sendtaskid" name="id" type="text" style="display: none" value="1">
                     <button class="btn waves-effect waves-light" type="submit" name="action" id="stop">STOP
                         <i class="material-icons right">send</i>
                     </button>
@@ -82,6 +91,14 @@
             </form>
 
         </div> 
+
+        
+        {% for time in times %}
+            <div class="timesdiv">
+                <p>{{ time.getName }}</p>
+            </div>
+        {% endfor %}
+        
         
         {% endblock %}
         {% block javascripts %}

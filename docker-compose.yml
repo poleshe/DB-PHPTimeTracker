@@ -1,5 +1,6 @@
 version: '3'
 services:
+  # Nging service. Serves the project folder and uses the 8001 port on the host machine.
   nginx:
     build:
       context: .
@@ -12,6 +13,7 @@ services:
       - default
     depends_on:
       - mysql
+  # PHP service. Contains the symfony installation and the whole project.
   php:
     build:
       context: .
@@ -24,6 +26,7 @@ services:
       - default
     depends_on:
       - mysql
+  # MYSQL Service, uses the mysql image and the 3306 host port. The default auth command is for Symfony's ORM compatibility,
   mysql:
     image: mysql
     command:
@@ -32,8 +35,6 @@ services:
       - '--default_authentication-plugin=mysql_native_password'
     environment:
       MYSQL_DATABASE: timetracker
-      MYSQL_USER: polestecha
-      MYSQL_PASSWORD: polestecha
       MYSQL_ROOT_PASSWORD: polestecha
     ports:
       - '3306:3306'
